@@ -263,7 +263,7 @@ class ChartsContainer extends React.Component {
     <Bar key={index} dataKey={a.name} stackId='stack' fill={colors[index]} isAnimationActive={false}/>)
 
     const Toggle = this.state.isProjectView ? 'Project View' : 'Name View'
-    
+
     var allSectorSelected = []
     var allPTypeSelected = []
 
@@ -285,6 +285,8 @@ class ChartsContainer extends React.Component {
 
     var isAllChecked = isSectorChecked&&isPTypeChecked
     this.state.isAllChecked = isAllChecked
+
+    var lastDate = Object.keys(allprojects)[Object.keys(allprojects).length-1]
 
     return (
 
@@ -327,7 +329,8 @@ class ChartsContainer extends React.Component {
                 focused={this.state.focused} // PropTypes.bool
                 onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
                 numberOfMonths = {1}
-                isOutsideRange = {() => {true}}
+                isOutsideRange = {(d) => !d.isBetween('Apr-10-2017', moment(lastDate).isoWeekday(7))}
+                isDayBlocked = {(d) => console.log(lastDate)}
               />
             </div>
             <div style={{display: 'block', marginTop: '10px'}}>
