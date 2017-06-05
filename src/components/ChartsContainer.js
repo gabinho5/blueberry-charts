@@ -1,8 +1,6 @@
 import React from 'react'
 import Charts from './Charts'
-// import Filtering from './Filtering'
-import allprojects from './global.json'
-// import nameproject from './nameproject.json'
+// import allprojects from './global.json'
 import Radium from 'radium'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates'
@@ -15,12 +13,12 @@ import 'react-select/dist/react-select.css';
 
 var firebase = require('firebase');
 var app = firebase.initializeApp({
-    apiKey: "AIzaSyC_HPogdDajow5L4YJXY1Isom6MIpxqzQw",
-    authDomain: "chartsexample.firebaseapp.com",
-    databaseURL: "https://chartsexample.firebaseio.com",
-    projectId: "chartsexample",
-    storageBucket: "chartsexample.appspot.com",
-    messagingSenderId: "971525237244"
+  apiKey: "AIzaSyD9pUhAVT2WLJyZAkF9BtupOnzkEwgu-F8",
+  authDomain: "blueberry-charts.firebaseapp.com",
+  databaseURL: "https://blueberry-charts.firebaseio.com",
+  projectId: "blueberry-charts",
+  storageBucket: "blueberry-charts.appspot.com",
+  messagingSenderId: "722005862176"
 });
 
 const styles = {
@@ -96,7 +94,7 @@ class ChartsContainer extends React.Component {
 
     this.state = {
       isProjectView: true,
-      date: 'May-5-2017',
+      date: 'May-05-2017',
       startDate: moment(),
       focused: false,
       true: true,
@@ -124,14 +122,14 @@ class ChartsContainer extends React.Component {
         'other': true
       },
       isAllChecked: true,
-      nameProject: {},
+      allprojects: {},
     }
   }
 
   componentWillMount () {
-      app.database().ref('/').once('value').then((snapshot) => {
-          this.setState({ nameProject: snapshot.val() })
-      })
+    app.database().ref('/').once('value').then((snapshot) => {
+      this.setState({ allprojects: snapshot.val() })
+    })
   }
 
   handleClick = () => {
@@ -212,15 +210,21 @@ class ChartsContainer extends React.Component {
 
   handleCalendar = (date) => {
     this.setState({
-      date: date.clone().isoWeekday(5).format('MMM-D-YYYY'),
+      date: date.clone().isoWeekday(5).format('MMM-DD-YYYY'),
       startDate: date,
     });
   }
 
   render() {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    const { date, nameProject } = this.state
-    console.log('state', this.state)
+    const { date, allprojects } = this.state
+
+    var lastDate = Object.keys(allprojects)[Object.keys(allprojects).length-1]
+
+    if (allprojects[date] == undefined) {
+      return <div> Loading... </div>;
+    }
+
     var projectObj = {};
     var nameObj = {};
 
@@ -290,7 +294,7 @@ class ChartsContainer extends React.Component {
 
     })
     var isSectorChecked = allSectorSelected.filter(function(c) {
-    	return c;
+      return c;
     }).length === allSectorSelected.length;
 
     Object.keys(this.state.checkedPTypes).map((key, index)=>{
@@ -298,13 +302,11 @@ class ChartsContainer extends React.Component {
 
     })
     var isPTypeChecked = allPTypeSelected.filter(function(c) {
-    	return c;
+      return c;
     }).length === allPTypeSelected.length;
 
     var isAllChecked = isSectorChecked&&isPTypeChecked
     this.state.isAllChecked = isAllChecked
-
-    var lastDate = Object.keys(allprojects)[Object.keys(allprojects).length-1]
 
     return (
 
