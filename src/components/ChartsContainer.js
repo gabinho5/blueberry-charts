@@ -2,7 +2,7 @@ import React from 'react'
 import Charts from './Charts'
 // import Filtering from './Filtering'
 import allprojects from './global.json'
-import nameproject from './nameproject.json'
+// import nameproject from './nameproject.json'
 import Radium from 'radium'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates'
@@ -13,6 +13,15 @@ import { DropdownButton, MenuItem, Checkbox, Glyphicon, Dropdown } from 'react-b
 import Select from 'react-select'
 import 'react-select/dist/react-select.css';
 
+var firebase = require('firebase');
+var app = firebase.initializeApp({
+    apiKey: "AIzaSyC_HPogdDajow5L4YJXY1Isom6MIpxqzQw",
+    authDomain: "chartsexample.firebaseapp.com",
+    databaseURL: "https://chartsexample.firebaseio.com",
+    projectId: "chartsexample",
+    storageBucket: "chartsexample.appspot.com",
+    messagingSenderId: "971525237244"
+});
 
 const styles = {
   containerstyles: {
@@ -115,7 +124,14 @@ class ChartsContainer extends React.Component {
         'other': true
       },
       isAllChecked: true,
+      nameProject: {},
     }
+  }
+
+  componentWillMount () {
+      app.database().ref('/').once('value').then((snapshot) => {
+          this.setState({ nameProject: snapshot.val() })
+      })
   }
 
   handleClick = () => {
@@ -203,6 +219,8 @@ class ChartsContainer extends React.Component {
 
   render() {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    const { date, nameProject } = this.state
+    console.log('state', this.state)
     var projectObj = {};
     var nameObj = {};
 
@@ -339,6 +357,7 @@ class ChartsContainer extends React.Component {
 
           </div>
         </div>
+        <h2> Week of: { date } </h2>
         <div style={{display: 'block', height: '80%', width: '100%', minHeight: '500px'}}>
           <Charts filteredobject = {nameprojectObj} isProjectView = {this.state.isProjectView} date={this.state.date} projectfilters = {projectfilters} namefilters = {namefilters}/>
         </div>
