@@ -9,7 +9,8 @@ import moment from 'moment'
 import logo from './logo.png'
 import { DropdownButton, MenuItem, Checkbox, Glyphicon, Dropdown } from 'react-bootstrap'
 import Select from 'react-select'
-import 'react-select/dist/react-select.css';
+import 'react-select/dist/react-select.css'
+import Loading from './Loading'
 
 var firebase = require('firebase');
 var app = firebase.initializeApp({
@@ -219,10 +220,18 @@ class ChartsContainer extends React.Component {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     const { date, allprojects } = this.state
 
-    var lastDate = Object.keys(allprojects)[Object.keys(allprojects).length-1]
+    var datesArray = Object.keys(allprojects)
+    var lastDate = 'Jan-01-2017'
+
+    for (var i = 0; i < datesArray.length; i++) {
+      if (moment(datesArray[i]).isAfter(lastDate)) {
+        lastDate = datesArray[i]
+      }
+    }
+  
 
     if (allprojects[date] == undefined) {
-      return <div> Loading... </div>;
+      return <Loading/>
     }
 
     var projectObj = {};
@@ -350,7 +359,7 @@ class ChartsContainer extends React.Component {
                 onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
                 numberOfMonths = {1}
                 isOutsideRange = {(d) => !d.isBetween('Apr-10-2017', moment(lastDate).isoWeekday(7))}
-                isDayBlocked = {(d) => console.log(lastDate)}
+                // isDayBlocked = {(d) => console.log(lastDate)}
               />
             </div>
             <div style={{display: 'block', marginTop: '10px'}}>
