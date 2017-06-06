@@ -1,8 +1,7 @@
 import React from 'react'
 import Charts from './Charts'
 // import Filtering from './Filtering'
-import allprojects from './global.json'
-// import nameproject from './nameproject.json'
+// import allprojects from './global.json'
 import Radium from 'radium'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates'
@@ -12,6 +11,8 @@ import logo from './logo.png'
 import { DropdownButton, MenuItem, Checkbox, Glyphicon, Dropdown } from 'react-bootstrap'
 import Select from 'react-select'
 import 'react-select/dist/react-select.css';
+
+import Logo from './Logo'
 
 var firebase = require('firebase');
 var app = firebase.initializeApp({
@@ -124,13 +125,13 @@ class ChartsContainer extends React.Component {
         'other': true
       },
       isAllChecked: true,
-      nameProject: {},
+      allprojects: {},
     }
   }
 
   componentWillMount () {
       app.database().ref('/').once('value').then((snapshot) => {
-          this.setState({ nameProject: snapshot.val() })
+          this.setState({ allprojects: snapshot.val() })
       })
   }
 
@@ -219,8 +220,12 @@ class ChartsContainer extends React.Component {
 
   render() {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    const { date, nameProject } = this.state
-    console.log('state', this.state)
+    const { date, allprojects } = this.state
+
+    if ( allprojects[date] == undefined ) {
+        return <div> Loading </div>;
+    }
+
     var projectObj = {};
     var nameObj = {};
 
@@ -304,12 +309,13 @@ class ChartsContainer extends React.Component {
     var isAllChecked = isSectorChecked&&isPTypeChecked
     this.state.isAllChecked = isAllChecked
 
+
     return (
 
       <div style={styles.containerstyles}>
         <div style ={styles.topbar}>
           <div style= {styles.blueberry}>
-            <img src={logo} style={{maxWidth: '260px', height: 'auto', }}/>
+            <Logo />
           </div>
           <div style={styles.datepicker}>
             <div style={{position: 'absolute', marginTop: '20px', marginLeft:'260px'}}>
