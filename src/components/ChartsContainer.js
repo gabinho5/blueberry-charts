@@ -1,6 +1,5 @@
 import React from 'react'
 import Charts from './Charts'
-// import Filtering from './Filtering'
 // import allprojects from './global.json'
 import Radium from 'radium'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
@@ -10,18 +9,19 @@ import moment from 'moment'
 import logo from './logo.png'
 import { DropdownButton, MenuItem, Checkbox, Glyphicon, Dropdown } from 'react-bootstrap'
 import Select from 'react-select'
-import 'react-select/dist/react-select.css';
+import 'react-select/dist/react-select.css'
+import Loading from './Loading'
 
 import Logo from './Logo'
 
 var firebase = require('firebase');
 var app = firebase.initializeApp({
-    apiKey: "AIzaSyC_HPogdDajow5L4YJXY1Isom6MIpxqzQw",
-    authDomain: "chartsexample.firebaseapp.com",
-    databaseURL: "https://chartsexample.firebaseio.com",
-    projectId: "chartsexample",
-    storageBucket: "chartsexample.appspot.com",
-    messagingSenderId: "971525237244"
+  apiKey: "AIzaSyD9pUhAVT2WLJyZAkF9BtupOnzkEwgu-F8",
+  authDomain: "blueberry-charts.firebaseapp.com",
+  databaseURL: "https://blueberry-charts.firebaseio.com",
+  projectId: "blueberry-charts",
+  storageBucket: "blueberry-charts.appspot.com",
+  messagingSenderId: "722005862176"
 });
 
 const styles = {
@@ -97,7 +97,7 @@ class ChartsContainer extends React.Component {
 
     this.state = {
       isProjectView: true,
-      date: 'May-5-2017',
+      date: 'May-05-2017',
       startDate: moment(),
       focused: false,
       true: true,
@@ -130,6 +130,7 @@ class ChartsContainer extends React.Component {
   }
 
   componentWillMount () {
+
       app.database().ref('/').once('value').then((snapshot) => {
           this.setState({ allprojects: snapshot.val() })
       })
@@ -213,7 +214,7 @@ class ChartsContainer extends React.Component {
 
   handleCalendar = (date) => {
     this.setState({
-      date: date.clone().isoWeekday(5).format('MMM-D-YYYY'),
+      date: date.clone().isoWeekday(5).format('MMM-DD-YYYY'),
       startDate: date,
     });
   }
@@ -222,8 +223,18 @@ class ChartsContainer extends React.Component {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     const { date, allprojects } = this.state
 
-    if ( allprojects[date] == undefined ) {
-        return <div> Loading </div>;
+    var datesArray = Object.keys(allprojects)
+    var lastDate = 'Jan-01-2017'
+
+    for (var i = 0; i < datesArray.length; i++) {
+      if (moment(datesArray[i]).isAfter(lastDate)) {
+        lastDate = datesArray[i]
+      }
+    }
+  
+
+    if (allprojects[date] == undefined) {
+      return <Loading/>
     }
 
     var projectObj = {};
@@ -295,7 +306,7 @@ class ChartsContainer extends React.Component {
 
     })
     var isSectorChecked = allSectorSelected.filter(function(c) {
-    	return c;
+      return c;
     }).length === allSectorSelected.length;
 
     Object.keys(this.state.checkedPTypes).map((key, index)=>{
@@ -303,7 +314,7 @@ class ChartsContainer extends React.Component {
 
     })
     var isPTypeChecked = allPTypeSelected.filter(function(c) {
-    	return c;
+      return c;
     }).length === allPTypeSelected.length;
 
     var isAllChecked = isSectorChecked&&isPTypeChecked
@@ -351,7 +362,8 @@ class ChartsContainer extends React.Component {
                 focused={this.state.focused} // PropTypes.bool
                 onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
                 numberOfMonths = {1}
-                isOutsideRange = {() => {true}}
+                isOutsideRange = {(d) => !d.isBetween('Apr-10-2017', moment(lastDate).isoWeekday(7))}
+                // isDayBlocked = {(d) => console.log(lastDate)}
               />
             </div>
             <div style={{display: 'block', marginTop: '10px'}}>

@@ -1,7 +1,10 @@
 var jsonfile = require('jsonfile')
 
-var newdate = jsonfile.readFileSync('../../../PythonParsing/parsed_json/May-26-2017.json')
+var inputdate = process.argv[2]
+
+var newdate = jsonfile.readFileSync(`../../../PythonParsing/parsed_json/${inputdate}.json`)
 
 var currentnameproject = jsonfile.readFileSync('./global.json')
-currentnameproject['May-26-2017'] = newdate['May-26-2017']
+
+currentnameproject[inputdate] = newdate[inputdate]
 jsonfile.writeFileSync('./global.json', currentnameproject, {spaces:1})
