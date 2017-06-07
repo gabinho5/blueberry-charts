@@ -231,7 +231,7 @@ class ChartsContainer extends React.Component {
         lastDate = datesArray[i]
       }
     }
-  
+
 
     if (allprojects[date] == undefined) {
       return <Loading/>
@@ -372,7 +372,7 @@ class ChartsContainer extends React.Component {
 
           </div>
         </div>
-        <h2> Week of: { date } </h2>
+        <h2 style={{fontSize:24, fontFamily: 'Quicksand', textAlign: 'center'}}> Week of: { date } </h2>
         <div style={{display: 'block', height: '80%', width: '100%', minHeight: '500px'}}>
           <Charts filteredobject = {nameprojectObj} isProjectView = {this.state.isProjectView} date={this.state.date} projectfilters = {projectfilters} namefilters = {namefilters}/>
         </div>
