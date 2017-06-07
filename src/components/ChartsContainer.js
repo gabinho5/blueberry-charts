@@ -12,6 +12,8 @@ import Select from 'react-select'
 import 'react-select/dist/react-select.css'
 import Loading from './Loading'
 
+import Logo from './Logo'
+
 var firebase = require('firebase');
 var app = firebase.initializeApp({
   apiKey: "AIzaSyD9pUhAVT2WLJyZAkF9BtupOnzkEwgu-F8",
@@ -128,9 +130,10 @@ class ChartsContainer extends React.Component {
   }
 
   componentWillMount () {
-    app.database().ref('/').once('value').then((snapshot) => {
-      this.setState({ allprojects: snapshot.val() })
-    })
+
+      app.database().ref('/').once('value').then((snapshot) => {
+          this.setState({ allprojects: snapshot.val() })
+      })
   }
 
   handleClick = () => {
@@ -317,12 +320,13 @@ class ChartsContainer extends React.Component {
     var isAllChecked = isSectorChecked&&isPTypeChecked
     this.state.isAllChecked = isAllChecked
 
+
     return (
 
       <div style={styles.containerstyles}>
         <div style ={styles.topbar}>
           <div style= {styles.blueberry}>
-            <img src={logo} style={{maxWidth: '260px', height: 'auto', }}/>
+            <Logo />
           </div>
           <div style={styles.datepicker}>
             <div style={{position: 'absolute', marginTop: '20px', marginLeft:'260px'}}>
