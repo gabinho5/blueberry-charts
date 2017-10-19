@@ -104,3 +104,15 @@ body {
     stroke-dashoffset: -600;
   }
 }
+.csvlinkstyles:hover {
+    background-color: #fff;
+    color: #000021 !important;
+    text-decoration: none;
+}
+.csvlinkstyles:focus {
+    text-decoration: none;
+}
+/*.csvlinkstyles {
+    background-color: 'red';
+    color: '#000021 !important';
+}*/
