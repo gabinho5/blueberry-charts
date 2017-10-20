@@ -1,19 +1,16 @@
 import React from 'react'
 import Charts from './Charts'
 import Radium from 'radium'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
-import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates'
+import { Bar } from 'recharts'
+import { SingleDatePicker } from 'react-dates'
 import 'react-dates/lib/css/_datepicker.css'
 import moment from 'moment'
 import logo from './logo.png'
-import { DropdownButton, MenuItem, Checkbox, Glyphicon, Dropdown } from 'react-bootstrap'
-import Select from 'react-select'
+import { MenuItem } from 'react-bootstrap'
 import 'react-select/dist/react-select.css'
 import Loading from './Loading'
-import CsvButton from './csvbutton'
 import LoginModal from './loginmodal'
 import Logo from './Logo'
-import {CSVLink} from 'react-csv';
 import HttpServices from '../helpers/HttpServices'
 // import allprojects from './global.json'
 
@@ -435,7 +432,7 @@ class ChartsContainer extends React.Component {
         return (
 
             <div style={styles.containerstyles}>
-                {this.state.modal && <LoginModal exitModal={this.exitModal}/>}
+                 <LoginModal exitModal={this.exitModal}/>
                 <div style ={styles.topbar}>
                     <div style= {styles.blueberry}>
                         <Logo />
@@ -483,7 +480,9 @@ class ChartsContainer extends React.Component {
                             <button key="view" style={styles.buttonstyles} onClick={this.handleClick}>{Toggle}</button>
                         </div>
                     </div>
-                    <CsvButton data={csvdata} onClick={() => this.pullInfo()}/>
+                    {/* <Button data={csvdata} onClick={() => this.checkForLogin()}/> */}
+                    {/* <CsvButton  onClick={() => this.checkForLogin()}/> */}
+
                     {/* onClick={() => this.checkForLogin()} */}
                 </div>
                 <h2 style={{fontSize:24, fontFamily: 'Quicksand', textAlign: 'center'}}> Week of: { date } </h2>
