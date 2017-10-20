@@ -5,7 +5,6 @@ import { HelpBlock, DropdownButton, MenuItem, Checkbox, Glyphicon, Dropdown } fr
 
 const styles = {
     container: {
-        display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
@@ -16,14 +15,17 @@ const styles = {
         minWidth: '1000'
     },
     modalcontainer: {
+        display:'flex',
         height: '220px',
         width: '300px',
         backgroundColor: 'white',
-        display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-around',
+        // justifyContent: 'space-around'
+        top: '30vh',
+        left: '30vw',
         zIndex: 2,
+        position:'absolute',
         borderRadius: 20,
         borderColor: '#313639',
         borderWidth: '2px',
@@ -34,20 +36,29 @@ const styles = {
         fontSize:24,
         fontFamily: 'Quicksand',
         color: '#313639',
-        marginBottom: 20
+        marginBottom: 20,
+        zIndex: 'inherit',
+
     },
     inputcontainer: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-around',
-        padding: 20
+        padding: 20,
+        marginTop: 10,
+        zIndex: 'inherit',
+
     },
     inputfield: {
+        zIndex: 'inherit',
+
         marginBottom: 5,
         borderRadius: 10,
     },
     submitbutton: {
+        zIndex: 'inherit',
+
         borderRadius: '20px',
         minwidth: '50px',
         fontFamily: 'Quicksand',
@@ -123,8 +134,8 @@ class LoginModal extends React.Component {
 
     render() {
         return (
-            <div style={styles.container} onClick={this.props.exitModal}>
-                <div style={styles.modalcontainer}>
+            <div style={{height: '100vh', width: '100vw', position:'relative', minWidth:'1000'}}>
+                <div style={styles.modalcontainer} onClick={this.props.dontExit}>
                     <div style={styles.modaltitle}>
                         Login
                     </div>
@@ -132,27 +143,29 @@ class LoginModal extends React.Component {
                         <FormGroup
                             controlId="formBasicText"
                             validationState={this.getValidationState()}
-                        >
-                        <FormControl
-                            type="text"
-                            // value={this.state.email}
-                            placeholder="Username"
-                            onChange={this.onChangeEmail}
-                            style={{width: 250, padding:10, margin: 10}}
-                        />
-                        <FormControl.Feedback />
-                        <FormControl
-                            type="text"
-                            // value={this.state.password}
-                            placeholder="Password"
-                            onChange={this.onChangePassword}
-                            style={{width: 250, padding:10, margin: 10}}
+                            >
+                                <FormControl
+                                    type="text"
+                                    // value={this.state.email}
+                                    placeholder="Username"
+                                    onChange={this.onChangeEmail}
+                                    style={{ padding: 10, marginBottom: 15}}
+                                />
+                                <FormControl.Feedback />
+                                <FormControl
+                                    type="text"
+                                    // value={this.state.password}
+                                    placeholder="Password"
+                                    onChange={this.onChangePassword}
+                                    style={{ padding: 10}}
 
-                        />
-                        </FormGroup>
-                    </form>
-                    <div style={styles.submitbutton} onClick={this.handleSubmit}>Submit</div>
-                </div>
+                                />
+                            </FormGroup>
+                        </form>
+                        <div style={styles.submitbutton} onClick={this.handleSubmit}>Submit</div>
+                    </div>
+                    <div style={styles.container} onClick={this.props.exitModal}>
+                    </div>
             </div>
         )
     };

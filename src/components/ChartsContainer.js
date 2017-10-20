@@ -12,6 +12,7 @@ import Loading from './Loading'
 import LoginModal from './loginmodal'
 import Logo from './Logo'
 import HttpServices from '../helpers/HttpServices'
+import CsvButton from './csvbutton'
 // import allprojects from './global.json'
 
 var firebase = require('firebase');
@@ -310,6 +311,11 @@ class ChartsContainer extends React.Component {
             modal: false,
         })
     }
+    openModal = () => {
+        this.setState({
+            modal: true,
+        })
+    }
     checkForLogin = () => {
         this.setState({
             modal: true,
@@ -432,7 +438,7 @@ class ChartsContainer extends React.Component {
         return (
 
             <div style={styles.containerstyles}>
-                 <LoginModal exitModal={this.exitModal}/>
+                 {this.state.modal && <LoginModal openModal={this.openModal} exitModal={this.exitModal}/>}
                 <div style ={styles.topbar}>
                     <div style= {styles.blueberry}>
                         <Logo />
@@ -481,7 +487,7 @@ class ChartsContainer extends React.Component {
                         </div>
                     </div>
                     {/* <Button data={csvdata} onClick={() => this.checkForLogin()}/> */}
-                    {/* <CsvButton  onClick={() => this.checkForLogin()}/> */}
+                    <CsvButton data={csvdata} onClick={() => this.checkForLogin()}/>
 
                     {/* onClick={() => this.checkForLogin()} */}
                 </div>
