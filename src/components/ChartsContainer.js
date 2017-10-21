@@ -15,7 +15,7 @@ import LoginModal from './loginmodal'
 import Logo from './Logo'
 import {CSVLink} from 'react-csv';
 import HttpServices from '../helpers/HttpServices'
-// import allprojects from './global.json'
+// import allProjects from './global.json'
 
 var firebase = require('firebase');
 var app = firebase.initializeApp({
@@ -27,6 +27,7 @@ var app = firebase.initializeApp({
     messagingSenderId: "722005862176"
 });
 const colors = [
+    '#ec05bb',
     '#de0b74',
     '#a4e1f5',
     '#a94402',
@@ -40,24 +41,67 @@ const colors = [
     '#4826df',
     '#9682f3',
     '#82f3a4',
-    '#cff32a',
+    '#f9fa94',
     '#fcf523',
     '#7c3b86',
     '#3b4586',
     '#055789',
     '#4c7780',
-    '#ec05bb',
-    '#75022f',
     '#a204fc',
-    '#0480fc',
     '#85af90',
+    '#cff32a',
+    '#de3909',
+    '#73b273',
+    '#0480fc',
+    '#75022f',
     '#d4f5ec',
     '#1b1755',
-    '#de3909',
-    '#f9fa94',
-    '#73b273',
     '#024ea9'
 ]
+const blueberryDictionary = {
+    // '1': {first_name: 'Jianbiao', last_name: 'Chen'},
+    '2': {first_name: 'Andrew', last_name: 'Sun'},
+    // '3': {first_name: 'Mike', last_name: 'Campbell'},
+    '4': {first_name: 'Gabriel', last_name: 'Munoz'},
+    '5': {first_name: 'Natalie', last_name: 'De.Clercq'},
+    '6': {first_name: 'Sasha', last_name: 'Soshnin'},
+    '7': {first_name: 'Danielle', last_name: 'Hyatt'},
+    '8': {first_name: 'Kalsey ', last_name: 'Sanford'},
+    // '9': {first_name: 'Daryl', last_name: 'Rowland'},
+    '10': {first_name: 'Amanda ', last_name: 'Scharkss'},
+    '11': {first_name: 'Maria', last_name: 'Rymer'},
+    // '12': {first_name: 'Hadden', last_name: 'Fray-Smith'},
+    // '14': {first_name: 'Andrew', last_name: 'Tarver'},
+    '15': {first_name: 'Leslie', last_name: 'Lockyer'},
+    '16': {first_name: 'Daisi', last_name: 'Arichabala'},
+    '17': {first_name: 'Shawn', last_name: 'Sam'},
+    '18': {first_name: 'Jacki ', last_name: 'Yeung'},
+    // '19': {first_name: 'Michael', last_name: 'Stanley'},
+    '20': {first_name: 'Nick', last_name: 'Partie'},
+    '21': {first_name: 'Steven', last_name: 'Delpilar'},
+    '22': {first_name: 'Vandana', last_name: 'Kumar'},
+    '23': {first_name: 'Jacqueline', last_name: 'Kuo'},
+    '24': {first_name: 'Franco', last_name: 'Lebolo'},
+    '25': {first_name: 'Eric', last_name: 'Kohn'},
+    '27': {first_name: 'Phoebe', last_name: 'Ross'},
+    '28': {first_name: 'Joyce', last_name: 'Lin'},
+    // '30': {first_name: 'Anthony', last_name: 'Keating'},
+    '31': {first_name: 'Maxwell', last_name: 'Ridgeway'},
+    '32': {first_name: 'Andre', last_name: 'moskowitz'},
+    '33': {first_name: 'Ricki', last_name: 'Kong'},
+    '34': {first_name: 'Hannah', last_name: 'Schwartz'},
+    '35': {first_name: 'Jeffrey ', last_name: 'Kole'},
+    '36': {first_name: 'Sara', last_name: 'Analoui'},
+    '37': {first_name: 'Benjamin', last_name: 'Chin'},
+    // '38': {first_name: 'Mike', last_name: 'Campbell'},
+    '42': {first_name: 'Jonny', last_name: 'Andrews'},
+    '43': {first_name: 'Ryan', last_name: 'Yeh'},
+    '44': {first_name: 'Vassilis', last_name: 'Rousschatzakis'},
+    '45': {first_name: 'Asia', last_name: 'Grant'},
+    // '46': {first_name: 'Neil', last_name: 'Gordon'},
+    // '47': {first_name: 'Greg', last_name: 'Piccolo'},
+    '48': {first_name: 'Peter', last_name: 'Weon'}
+}
 
 const styles = {
     containerstyles: {
@@ -170,6 +214,7 @@ class ChartsContainer extends React.Component {
         super(props);
 
         this.state = {
+            me: {},
             isProjectView: true,
             //start date
             date: 'Oct-2-2017',
@@ -200,27 +245,47 @@ class ChartsContainer extends React.Component {
                 'other': true
             },
             isAllChecked: true,
-            allprojects: {},
+            allProjects: {},
+            naughtyList: {},
             modal: false,
+            token: ''
         }
     }
 
     componentWillMount() {
 
         // app.database().ref('/').once('value').then((snapshot) => {
-        //     this.setState({ allprojects: snapshot.val() })
+        //     this.setState({ allProjects: snapshot.val() })
         // })
         HttpServices.get("/api/projects/hours", (err, res) => {
-                if (err) {
-                    console.log(err)
-                }
-                else {
-                    this.setState({
-                        allprojects: res
+            if (err) {
+                console.log(err)
+            }
+            else {
+                const allProjects = res;
+                const niceList = {};
+                const naughtyList = {};
+                Object.keys(allProjects).forEach(date => {
+                    niceList[date] = []
+                    naughtyList[date] = []
+                    allProjects[date].forEach(obj => {
+                        if (!niceList[date].includes(obj.user_id)) {
+                            niceList[date].push(obj.user_id.toString())
+                        }
                     })
-                    console.log(this.state.allprojects)
-                }
-            })
+                    Object.keys(blueberryDictionary).forEach(id => {
+                        if(!niceList[date].includes(id) && !naughtyList[date].includes(id)) {
+                            naughtyList[date].push(blueberryDictionary[id].first_name)
+                        }
+                    })
+                })
+
+                this.setState({
+                    allProjects: allProjects,
+                    naughtyList: naughtyList
+                })
+            }
+        })
     }
 
     //project vs name view
@@ -329,12 +394,58 @@ class ChartsContainer extends React.Component {
             }
         })
     }
+    renderNaughtyList = () => {
+        return(
+            this.state.naughtyList[this.state.date].map((name, index) => {
+                return (
+                    <div key={index} style={styles.naughty}>{name}</div>
+                    // console.log(name)
+                )
+            })
+        )
+    }
+    userLogin = () => {
+        return new Promise((resolve, reject) => {
+            HttpServices.post('/api/user/login', {email: this.state.email, password: this.state.password}, (err, res) => {
+                this.setState({token: 'loading'})
+                if (err) {
+                    console.log(err)
+                    this.setState({token: 'error'})
+                } else {
+                    HttpServices.get('/api/user/me', (err, res) => {
+                        this.setState({token: 'loading'})
+                        if (err) {
+                            console.log(err)
+                            this.setState({token: 'error'})
+                        } else {
+                            this.setState({token: res.token})
+                        }
+                    })
+                    this.setState({token: res.token})
+                }
+            })
+        })
+    }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     render() {
-        const { date, allprojects } = this.state
+        const { date, allProjects } = this.state
 
-        var datesArray = Object.keys(allprojects)
+        let allData = [];
+        let one = {
+            hey: [{color: 'red', number: 'three'}, {color: 'orange', number: 'four'}, {color: 'purple', number: 'seven'}],
+            ho: [{color: 'blue', number: 'one'}, {color: 'azul', number: 'ocho'}, {color: 'green', number: 'eighteen'}],
+            letsgo: [{color: 'yellow', number: 'two'}, {color: 'rojo', number: 'five'}, {color: 'doorhinge', number: 'thirty'}]
+        }
+
+        Object.keys(allProjects).forEach(key => {
+            allProjects[key].forEach(item => {
+                allData.push(item)
+            })
+        })
+        console.log(allProjects)
+
+        var datesArray = Object.keys(allProjects)
         var lastDate = 'Jan-1-2017'
 
         for (var i = 0; i < datesArray.length; i++) {
@@ -344,16 +455,16 @@ class ChartsContainer extends React.Component {
         }
 
 
-        if (allprojects[date] == undefined) {
+        if (allProjects[date] == undefined) {
             return <Loading/>
         }
 
         var projectObj = {};
         var nameObj = {};
 
-        for (var i = 0; i < allprojects[this.state.date].length; i++) { //1 variable
-            var currentProject = allprojects[this.state.date][i]
-            var currentName = allprojects[this.state.date][i]
+        for (var i = 0; i < allProjects[this.state.date].length; i++) { //1 variable
+            var currentProject = allProjects[this.state.date][i]
+            var currentName = allProjects[this.state.date][i]
             // if (!(this.state.filters.sector.includes(currentProject.sector) || this.state.filters.ptype.includes(currentProject.ptype))) { //2 vars
             if (Object.keys(projectObj).includes(currentProject.title)) {
                 projectObj[currentProject.title][currentProject.first_name] = currentProject.hours
@@ -483,7 +594,7 @@ class ChartsContainer extends React.Component {
                             <button key="view" style={styles.buttonstyles} onClick={this.handleClick}>{Toggle}</button>
                         </div>
                     </div>
-                    <CsvButton data={csvdata} onClick={() => this.pullInfo()}/>
+                    <CsvButton data={allData} onClick={() => this.pullInfo()}/>
                     {/* onClick={() => this.checkForLogin()} */}
                 </div>
                 <h2 style={{fontSize:24, fontFamily: 'Quicksand', textAlign: 'center'}}> Week of: { date } </h2>
@@ -498,14 +609,8 @@ class ChartsContainer extends React.Component {
                         <div style={{display: 'flex', justifyContent: 'space-between', paddingTop: '20px'}}>
                             <div style={{fontFamily: 'Quicksand', fontSize: '18px', color: '#000021', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: 20}}>
                                 Andrew's Naughty List
-                                <div style={{paddingTop: 20,}}>
-                                    <div style={styles.naughty}>Danielle</div>
-                                    <div style={styles.naughty}>Eric</div>
-                                    <div style={styles.naughty}>Myself</div>
-                                    <div style={styles.naughty}>Franco</div>
-                                    <div style={styles.naughty}>Peter</div>
-                                    <div style={styles.naughty}>Sarah Hill</div>
-                                    <div style={styles.naughty}>Vandana</div>
+                                <div style={{paddingTop: 20}}>
+                                    {this.renderNaughtyList()}
                                 </div>
                             </div>
                             {/* <div style={{fontFamily: 'Quicksand', fontSize: '18px', color: '#000021', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'}}>

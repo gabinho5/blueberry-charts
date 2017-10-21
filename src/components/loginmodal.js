@@ -23,7 +23,7 @@ const styles = {
         zIndex: 2,
     },
     modaltitle: {
-        fontSize:24,
+        fontSize: 24,
         fontFamily: 'Quicksand',
         color: '#000021'
     },
