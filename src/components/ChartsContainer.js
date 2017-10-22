@@ -1,21 +1,19 @@
 import React from 'react'
 import Charts from './Charts'
 import Radium from 'radium'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
-import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates'
+import { Bar } from 'recharts'
+import { SingleDatePicker } from 'react-dates'
 import 'react-dates/lib/css/_datepicker.css'
 import moment from 'moment'
 import logo from './logo.png'
-import { DropdownButton, MenuItem, Checkbox, Glyphicon, Dropdown } from 'react-bootstrap'
-import Select from 'react-select'
+import { MenuItem } from 'react-bootstrap'
 import 'react-select/dist/react-select.css'
 import Loading from './Loading'
-import CsvButton from './csvbutton'
 import LoginModal from './loginmodal'
 import Logo from './Logo'
-import {CSVLink} from 'react-csv';
 import HttpServices from '../helpers/HttpServices'
-// import allProjects from './global.json'
+import CsvButton from './csvbutton'
+// import allprojects from './global.json'
 
 var firebase = require('firebase');
 var app = firebase.initializeApp({
@@ -27,36 +25,67 @@ var app = firebase.initializeApp({
     messagingSenderId: "722005862176"
 });
 const colors = [
-    '#ec05bb',
-    '#de0b74',
-    '#a4e1f5',
-    '#a94402',
-    '#3be054',
-    '#a00f06',
-    '#f23529',
-    '#f9b707',
-    '#0bbd5c',
-    '#034b24',
-    '#40deee',
-    '#4826df',
-    '#9682f3',
-    '#82f3a4',
-    '#f9fa94',
-    '#fcf523',
-    '#7c3b86',
-    '#3b4586',
-    '#055789',
-    '#4c7780',
-    '#a204fc',
-    '#85af90',
-    '#cff32a',
-    '#de3909',
-    '#73b273',
-    '#0480fc',
-    '#75022f',
-    '#d4f5ec',
-    '#1b1755',
-    '#024ea9'
+    '#FF411D', //amandaR-1
+    '#DD3A1B', //amandaR-2
+    '#BB3015', //amandaR-3
+    '#A4250D', //amandaR-4
+    '#8A1E09', //amandaR-5
+
+    '#E551A7', //amandaP-1
+    // '#D04A98', //amandaP-2
+    '#AA3A7B', //amandaP-3
+    // '#852D60', //amandaP-4
+    '#5E1F44', //amandaP-5
+
+    '#7708EF', //amandPurp-1
+    // '#6507CC', //amandPurp-2
+    '#4F069E', //amandPurp-3
+    // '#3B0477', //amandPurp-4
+    '#280450', //amandPurp-5
+
+    '#0763FF', //amandBlue-1
+    // '#0A53D0', //amandBlue-2
+    '#053C9C', //amandBlue-3
+    // '#06307A', //amandBlue-4
+    '#052761', //amandBlue-5
+
+    '#17DCD3', //amandaCyan-1
+    '#14BFB8', //amandaCyan-2
+    // '#11A19C', //amandaCyan-3
+    '#0B7773', //amandaCyan-4
+    '#064644', //amandaCyan-5
+
+    '#00FF7F', //amandagreen-1
+    // '#00E672', //amandagreen-2
+    '#00CB65', //amandagreen-3
+    // '#029149', //amandagreen-4
+    '#005D2E', //amandagreen-5
+    '#66023C', //purple1
+    '#6F0342', //purple2
+    // '#7F044B', //purple3
+    '#86034F', //purple4
+    '#8B0452', //purple5
+    '#0B0B55', //blue1
+    '#0F0F63', //blue2
+    // '#12127C', //blue3
+    '#141485', //blue4
+    '#171799', //blue5
+    '#A00F06', //red1
+    '#B21309', //red2
+    // '#C91308', //red3
+    '#E01307', //red4
+    '#F01305', //red5
+    '#100C08', //black
+    '#372808', //yellow1
+    '#5B4411', //yellow2
+    // '#866010', //yellow3
+    '#BF8710', //yellow4
+    '#EBA50F', //yellow5
+    '#154211', //green1
+    '#1D5E17', //green2
+    // '#207718', //green3
+    '#2CA022', //green4
+    '#2EBE21', //green5
 ]
 const blueberryDictionary = {
     // '1': {first_name: 'Jianbiao', last_name: 'Chen'},
@@ -378,6 +407,11 @@ class ChartsContainer extends React.Component {
             modal: false,
         })
     }
+    openModal = () => {
+        this.setState({
+            modal: true,
+        })
+    }
     checkForLogin = () => {
         this.setState({
             modal: true,
@@ -546,7 +580,7 @@ class ChartsContainer extends React.Component {
         return (
 
             <div style={styles.containerstyles}>
-                {this.state.modal && <LoginModal exitModal={this.exitModal}/>}
+                 {this.state.modal && <LoginModal openModal={this.openModal} exitModal={this.exitModal}/>}
                 <div style ={styles.topbar}>
                     <div style= {styles.blueberry}>
                         <Logo />
@@ -594,7 +628,9 @@ class ChartsContainer extends React.Component {
                             <button key="view" style={styles.buttonstyles} onClick={this.handleClick}>{Toggle}</button>
                         </div>
                     </div>
-                    <CsvButton data={allData} onClick={() => this.pullInfo()}/>
+                    {/* <Button data={csvdata} onClick={() => this.checkForLogin()}/> */}
+                    <CsvButton data={csvdata} onClick={() => this.checkForLogin()}/>
+
                     {/* onClick={() => this.checkForLogin()} */}
                 </div>
                 <h2 style={{fontSize:24, fontFamily: 'Quicksand', textAlign: 'center'}}> Week of: { date } </h2>
