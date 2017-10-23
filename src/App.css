@@ -105,14 +105,36 @@ body {
   }
 }
 .csvlinkstyles:hover {
-    background-color: #fff;
-    color: #000021 !important;
+    background-color: transparent;
+    color: #fff !important;
     text-decoration: none;
 }
 .csvlinkstyles:focus {
     text-decoration: none;
 }
-/*.csvlinkstyles {
-    background-color: 'red';
-    color: '#000021 !important';
-}*/
+.submitbutton {
+    z-index: inherit;
+    border-radius: 20px;
+    min-width: 50px;
+    font-family: Quicksand;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: normal;
+    background-color: transparent;
+    color: ##000021;
+    border-color: #000021;
+    border-width: 2px;
+    padding-right: 48px;
+    padding-left: 48px;
+    padding-top: 5px;
+    padding-bottom: 3px;
+    margin-top: 20;
+    display: block;
+}
+.submitbutton:hover {
+    color: rgba(0, 0, 33, .6);
+    cursor: pointer;
+}
+.submitbutton:focus {
+    outline: none
+}

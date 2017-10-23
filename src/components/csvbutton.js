@@ -7,8 +7,7 @@ const styles = {
         fontFamily: 'Quicksand',
         fontSize: '15px',
         border: 'solid',
-        color: '#fff',
-        backgroundColor: 'transparent',
+        backgroundColor: '#fff',
         height: '50px',
         borderRadius: '10px',
         borderWidth: '2px',
@@ -22,8 +21,9 @@ const styles = {
         minWidth: '200px',
         marginRight: '20px',
       ':hover': {
-        backgroundColor: '#fff',
-        color: '#000021',
+        borderColor: '#fff',
+        backgroundColor: '#000021',
+        // color: '#fff !important',
         cursor: 'pointer',
       },
       ':focus': {
@@ -31,7 +31,7 @@ const styles = {
       }
   },
   csvlinkstyles: {
-      color: '#fff',
+      color: '#000021',
       backgroundColor: 'transparent',
       height: '-webkit-fill-available',
       width: '100%',
@@ -39,9 +39,9 @@ const styles = {
       alignItems: 'center',
       justifyContent: 'center',
       ':hover': {
-        backgroundColor: '#fff',
-        color: '#000021 !important',
-        cursor: 'pointer',
+          backgroundColor: 'transparent',
+          color: '#fff !important',
+          cursor: 'pointer',
       },
       ':focus': {
         outline: 'none',

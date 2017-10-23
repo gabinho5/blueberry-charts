@@ -26,8 +26,8 @@ var app = firebase.initializeApp({
 });
 const colors = [
     '#FF411D', //amandaR-1
-    '#DD3A1B', //amandaR-2
     '#BB3015', //amandaR-3
+    '#DD3A1B', //amandaR-2
     '#A4250D', //amandaR-4
     '#8A1E09', //amandaR-5
 
@@ -37,39 +37,39 @@ const colors = [
     // '#852D60', //amandaP-4
     '#5E1F44', //amandaP-5
 
-    '#7708EF', //amandPurp-1
-    // '#6507CC', //amandPurp-2
-    '#4F069E', //amandPurp-3
-    // '#3B0477', //amandPurp-4
     '#280450', //amandPurp-5
+    // '#3B0477', //amandPurp-4
+    '#4F069E', //amandPurp-3
+    // '#6507CC', //amandPurp-2
+    '#7708EF', //amandPurp-1
 
-    '#0763FF', //amandBlue-1
-    // '#0A53D0', //amandBlue-2
-    '#053C9C', //amandBlue-3
-    // '#06307A', //amandBlue-4
     '#052761', //amandBlue-5
+    // '#06307A', //amandBlue-4
+    '#053C9C', //amandBlue-3
+    // '#0A53D0', //amandBlue-2
+    '#0763FF', //amandBlue-1
 
-    '#17DCD3', //amandaCyan-1
-    '#14BFB8', //amandaCyan-2
-    // '#11A19C', //amandaCyan-3
-    '#0B7773', //amandaCyan-4
     '#064644', //amandaCyan-5
+    '#0B7773', //amandaCyan-4
+    // '#11A19C', //amandaCyan-3
+    '#14BFB8', //amandaCyan-2
+    '#17DCD3', //amandaCyan-1
 
-    '#00FF7F', //amandagreen-1
-    // '#00E672', //amandagreen-2
-    '#00CB65', //amandagreen-3
-    // '#029149', //amandagreen-4
     '#005D2E', //amandagreen-5
-    '#66023C', //purple1
-    '#6F0342', //purple2
-    // '#7F044B', //purple3
-    '#86034F', //purple4
-    '#8B0452', //purple5
+    // '#029149', //amandagreen-4
+    '#00CB65', //amandagreen-3
+    // '#00E672', //amandagreen-2
+    '#00FF7F', //amandagreen-1
     '#0B0B55', //blue1
     '#0F0F63', //blue2
     // '#12127C', //blue3
     '#141485', //blue4
     '#171799', //blue5
+    '#66023C', //purple1
+    '#6F0342', //purple2
+    // '#7F044B', //purple3
+    '#86034F', //purple4
+    '#8B0452', //purple5
     '#A00F06', //red1
     '#B21309', //red2
     // '#C91308', //red3
@@ -129,7 +129,10 @@ const blueberryDictionary = {
     '45': {first_name: 'Asia', last_name: 'Grant'},
     // '46': {first_name: 'Neil', last_name: 'Gordon'},
     // '47': {first_name: 'Greg', last_name: 'Piccolo'},
-    '48': {first_name: 'Peter', last_name: 'Weon'}
+    '48': {first_name: 'Peter', last_name: 'Weon'},
+    '49': {first_name: 'Nikita', last_name: 'Sangareddy'},
+    '50': {first_name: 'Andy', last_name: 'Sherman'},
+    '51': {first_name: 'Erin', last_name: 'Pindus'},
 }
 
 const styles = {
@@ -165,8 +168,8 @@ const styles = {
     },
     naughty: {
         color: 'red',
-        fontFamily: 'Quicksand ',
-        fontWeight: 'bold',
+        fontFamily: 'Quicksand',
+        fontWeight: '400',
         fontSize: '18px'
     },
     nice: {
@@ -292,6 +295,8 @@ class ChartsContainer extends React.Component {
         // app.database().ref('/').once('value').then((snapshot) => {
         //     this.setState({ allProjects: snapshot.val() })
         // })
+        const lastWeek = moment().day(-6).format('MMM-D-YYYY');
+        this.setState({date: lastWeek})
         HttpServices.get("/api/projects/hours", (err, res) => {
             if (err) {
                 console.log(err)
@@ -326,7 +331,6 @@ class ChartsContainer extends React.Component {
     //project vs name view
     handleClick = () => {
         this.setState({isProjectView: !this.state.isProjectView});
-        console.log(this.state.startDate.getMonth)
     }
 
     //filtering
@@ -473,7 +477,6 @@ class ChartsContainer extends React.Component {
                 modal: false,
                 success: ''
             })
-            console.log(this.state.token)
             HttpServices.get("/api/user/hours", (err, res) => {
                 if (err) {
                     console.log(err)
@@ -502,7 +505,6 @@ class ChartsContainer extends React.Component {
             this.state.naughtyList[this.state.date].map((name, index) => {
                 return (
                     <div key={index} style={styles.naughty}>{name}</div>
-                    // console.log(name)
                 )
             })
         )
@@ -546,7 +548,6 @@ class ChartsContainer extends React.Component {
                 allData.push(item)
             })
         })
-        console.log(allProjects)
 
         var datesArray = Object.keys(allProjects)
         var lastDate = 'Jan-1-2017'
@@ -652,7 +653,7 @@ class ChartsContainer extends React.Component {
                  {this.state.modal &&
                       <LoginModal openModal={this.openModal} exitModal={this.exitModal}
                           onChangePassword={this.onChangePassword} onChangeEmail={this.onChangeEmail} onSubmit={this.checkForLogin}
-                          error={this.state.error} success={this.state.success}/>}
+                          error={this.state.error} success={this.state.success} email={this.state.email} password={this.state.password}/>}
                 <div style ={styles.topbar}>
                     <div style= {styles.blueberry}>
                         <Logo />
@@ -714,26 +715,13 @@ class ChartsContainer extends React.Component {
                         <Charts filteredobject = {nameprojectObj} isProjectView = {this.state.isProjectView} date={this.state.date} projectfilters = {projectfilters} namefilters = {namefilters}/>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', width: '20%', paddingRight: '20px'}}>
-                        {/* <div style={{fontFamily: 'Quicksand', fontSize: '18px', color: '#000021'}}>
-                            Andrew's Lists
-                        </div> */}
                         <div style={{display: 'flex', justifyContent: 'space-between', paddingTop: '20px'}}>
-                            <div style={{fontFamily: 'Quicksand', fontSize: '18px', color: '#000021', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: 20}}>
+                            <div style={{fontFamily: 'Quicksand', fontSize: '18px', fontWeight:'bold', color: '#000021', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: 20}}>
                                 Andrew's Naughty List
                                 <div style={{paddingTop: 20}}>
                                     {this.renderNaughtyList()}
                                 </div>
                             </div>
-                            {/* <div style={{fontFamily: 'Quicksand', fontSize: '18px', color: '#000021', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'}}>
-                                Not So Naughty
-                                <div style={{paddingTop: 20}}>
-                                    <div style={styles.nice}>Gabe</div>
-                                    <div style={styles.nice}>Daisy</div>
-                                    <div style={styles.nice}>Max</div>
-                                    <div style={styles.nice}>Kara</div>
-                                    <div style={styles.nice}>Gabe</div>
-                                </div>
-                            </div> */}
                         </div>
                     </div>
                 </div>

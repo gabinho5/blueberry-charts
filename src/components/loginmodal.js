@@ -105,9 +105,11 @@ class LoginModal extends React.Component {
         if(this.state.email !== undefined){
             // let sub = this.state.email.substring(this.email.length-4,this.email.length-1)
             // console.log(sub)
-            const length = this.state.email.length;
-             let sub = this.state.email.substring(length-8,length)
-            if (sub==="@ibm.com") return 'success';
+            const length = this.props.email.length;
+             let sub = this.props.email.substring(length-8,length)
+             let sub1 = this.props.email.substring(length-11,length)
+             let sub2 = this.props.email.substring(length-10,length)
+            if (sub === "@ibm.com" || sub1 === "@us.ibm.com" || sub2 === "@gmail.com" || sub1 === "@jigsaw.xyz") return 'success';
             else if (length > 0) return 'warning';
         }
 
@@ -127,6 +129,7 @@ class LoginModal extends React.Component {
                         <FormGroup
                             controlId="formBasicText"
                             validationState={this.getValidationState()}
+                            style={{width: '220px'}}
                             >
                                 <FormControl
                                     type="text"
@@ -137,16 +140,18 @@ class LoginModal extends React.Component {
                                 />
                                 <FormControl.Feedback />
                                 <FormControl
-                                    type="text"
+                                    validationState={null}
+                                    type="password"
                                     // value={this.state.password}
                                     placeholder="Password"
                                     onChange={this.props.onChangePassword}
+                                    onSubmit={this.props.onSubmit}
                                     style={{ padding: 10}}
 
                                 />
                             </FormGroup>
                         </form>
-                        <div style={styles.submitbutton} onClick={this.props.onSubmit}>Submit</div>
+                        <div className='submitbutton' onClick={this.props.onSubmit}>Submit</div>
                     </div>
                     <div style={styles.container} onClick={this.props.exitModal}>
                     </div>
