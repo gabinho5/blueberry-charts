@@ -128,6 +128,7 @@ module.exports = {
 
     setToken: function (token) {
         this.token = token
+        console.log('done setting token')
     },
 
     clearToken: function () {

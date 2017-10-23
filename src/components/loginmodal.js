@@ -24,7 +24,7 @@ const styles = {
         zIndex: 2,
         position:'absolute',
         borderRadius: 20,
-        borderColor: '#313639',
+        borderColor: '#000021',
         borderWidth: '2px',
         // border: 'solid',
         padding: 20,
@@ -32,7 +32,7 @@ const styles = {
     modaltitle: {
         fontSize: 24,
         fontFamily: 'Quicksand',
-        color: '#313639',
+        color: '#000021',
         marginBottom: 20,
         zIndex: 'inherit',
 
@@ -64,8 +64,8 @@ const styles = {
         fontWeight: 'normal',
         backgroundColor: 'transparent',
         // border: 'solid',
-        color: '##313639',
-        borderColor: '#313639',
+        color: '##000021',
+        borderColor: '#000021',
         borderWidth: '2px',
         paddingRight: '48px',
         paddingLeft: '48px',
@@ -73,14 +73,19 @@ const styles = {
         paddingBottom: '3px',
         marginTop: 20,
         display: 'block',
-        // ':hover': {
-        //   backgroundColor: '#313639',
-        //   color: '#313639',
-        //   cursor: 'pointer',
-        // },
+        ':hover': {
+        //   color: '#fff',
+          cursor: 'pointer',
+        },
         ':focus': {
           outline: 'none'
         }
+    },
+    errormessage: {
+        fontFamily: 'Quicksand',
+        fontSize: 15,
+        color: 'red',
+        textAlign: 'center',
     }
 
 }
@@ -95,33 +100,13 @@ class LoginModal extends React.Component {
             value: ''
         }
     }
-    onChangePassword = (e) => {
-        this.setState({
-            password: e.target.value
-        })
-    }
-    onChangeEmail = (e) => {
-        this.setState({
-            email: e.target.value
-        })
-    }
-    handleSubmit = (event) => {
-        if(this.getValidationState() === 'warning')
-        {
-            alert("Please use an IBM email")
-        }
-        else(
-            alert("Thank you for logging in!")
-        )
-        // event.preventDefault();
-    }
+
     getValidationState= () => {
         if(this.state.email !== undefined){
             // let sub = this.state.email.substring(this.email.length-4,this.email.length-1)
             // console.log(sub)
             const length = this.state.email.length;
              let sub = this.state.email.substring(length-8,length)
-             console.log(sub==="@ibm.com")
             if (sub==="@ibm.com") return 'success';
             else if (length > 0) return 'warning';
         }
@@ -133,6 +118,8 @@ class LoginModal extends React.Component {
         return (
             <div style={{width: '100%', height: '100%', position:'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                 <div style={styles.modalcontainer} onClick={this.props.dontExit}>
+                    <div style={styles.errormessage}>{this.props.error}</div>
+                    <div style={[styles.errormessage, {color: 'green'}]}>{this.props.success}</div>
                     <div style={styles.modaltitle}>
                         Login
                     </div>
@@ -145,7 +132,7 @@ class LoginModal extends React.Component {
                                     type="text"
                                     // value={this.state.email}
                                     placeholder="Username"
-                                    onChange={this.onChangeEmail}
+                                    onChange={this.props.onChangeEmail}
                                     style={{ padding: 10, marginBottom: 15}}
                                 />
                                 <FormControl.Feedback />
@@ -153,16 +140,16 @@ class LoginModal extends React.Component {
                                     type="text"
                                     // value={this.state.password}
                                     placeholder="Password"
-                                    onChange={this.onChangePassword}
+                                    onChange={this.props.onChangePassword}
                                     style={{ padding: 10}}
 
                                 />
                             </FormGroup>
                         </form>
-                    <div style={styles.submitbutton} onClick={this.handleSubmit}>Submit</div>
-                </div>
-                <div style={styles.container} onClick={this.props.exitModal}>
-                </div>
+                        <div style={styles.submitbutton} onClick={this.props.onSubmit}>Submit</div>
+                    </div>
+                    <div style={styles.container} onClick={this.props.exitModal}>
+                    </div>
             </div>
         )
     };
