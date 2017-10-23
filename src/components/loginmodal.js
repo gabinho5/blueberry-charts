@@ -16,7 +16,7 @@ const styles = {
     },
     modalcontainer: {
         display:'flex',
-        height: '220px',
+        height: '250px',
         width: '300px',
         backgroundColor: 'white',
         flexDirection: 'column',
@@ -43,7 +43,6 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'space-around',
         padding: 20,
-        marginTop: 10,
         zIndex: 'inherit',
 
     },
@@ -81,6 +80,27 @@ const styles = {
           outline: 'none'
         }
     },
+    forgotbutton: {
+        fontFamily: 'Quicksand',
+        fontSize: '13px',
+        marginTop: '5px',
+        marginBottom: '5px',
+        fontWeight: 'normal',
+        backgroundColor: 'transparent',
+        color: 'rgba(0, 0, 33, .8)',
+        width: '220px',
+        display: 'flex',
+        justifyContent: 'flex-start',
+    },
+    forgottext: {
+        ':hover': {
+          color: 'red',
+          cursor: 'pointer',
+        },
+        ':focus': {
+          outline: 'none'
+        }
+    },
     errormessage: {
         fontFamily: 'Quicksand',
         fontSize: 15,
@@ -106,53 +126,181 @@ class LoginModal extends React.Component {
             // let sub = this.state.email.substring(this.email.length-4,this.email.length-1)
             // console.log(sub)
             const length = this.props.email.length;
-             let sub = this.props.email.substring(length-8,length)
-             let sub1 = this.props.email.substring(length-11,length)
-             let sub2 = this.props.email.substring(length-10,length)
+            let sub = this.props.email.substring(length-8,length)
+            let sub1 = this.props.email.substring(length-11,length)
+            let sub2 = this.props.email.substring(length-10,length)
             if (sub === "@ibm.com" || sub1 === "@us.ibm.com" || sub2 === "@gmail.com" || sub1 === "@jigsaw.xyz") return 'success';
             else if (length > 0) return 'warning';
         }
-
     }
-
-
+    renderLogin = () => {
+        return (
+            <div style={styles.modalcontainer} onClick={this.props.dontExit}>
+                <div style={styles.errormessage}>{this.props.error}</div>
+                <div style={[styles.errormessage, {color: 'green'}]}>{this.props.success}</div>
+                <div style={styles.modaltitle}>
+                    Antioxdiant Login
+                </div>
+                <form style={styles.inputcontainer}>
+                    <FormGroup
+                        controlId="formBasicText"
+                        validationState={this.getValidationState()}
+                        style={{width: '220px', marginBottom: 0}}
+                        >
+                            <FormControl
+                                type="text"
+                                value={this.props.email}
+                                placeholder="Email"
+                                onChange={this.props.onChangeEmail}
+                                style={{ padding: 10, marginBottom: 15}}
+                            />
+                            <FormControl.Feedback />
+                            <FormControl
+                                validationState={null}
+                                type="password"
+                                // value={this.state.password}
+                                placeholder="Password"
+                                onChange={this.props.onChangePassword}
+                                onSubmit={this.props.onSubmit}
+                                style={{ padding: 10}}
+                            />
+                        </FormGroup>
+                        <div style={styles.forgotbutton}>
+                            <div onClick={this.props.onForgotPassword} style={styles.forgottext}>Forgot Password</div>
+                        </div>
+                    </form>
+                    <div className='submitbutton' onClick={this.props.onSubmit}>Submit</div>
+                </div>
+        )
+    }
+    renderForgot = () => {
+        // userSendCode => send email
+        // res means its resetting
+        return (
+            <div style={styles.modalcontainer} onClick={this.props.dontExit}>
+                <div style={styles.errormessage}>{this.props.error}</div>
+                <div style={styles.modaltitle}>
+                    Enter your email
+                </div>
+                <form style={styles.inputcontainer}>
+                    <FormGroup
+                        controlId="formBasicText"
+                        validationState={this.getValidationState()}
+                        style={{width: '220px'}}>
+                        <FormControl
+                            type="text"
+                            value={this.props.email}
+                            placeholder="Email"
+                            onChange={this.props.onChangeEmail}
+                            style={{ padding: 10}}/>
+                        <FormControl.Feedback />
+                        <div style={styles.forgotbutton}>
+                            <div onClick={this.props.backToLogin} style={styles.forgottext}>Back to login</div>
+                        </div>
+                    </FormGroup>
+                </form>
+                <div className='submitbutton' onClick={this.props.onSubmitResetEmail}>Send code to my email</div>
+            </div>
+        )
+    }
+    renderOneTimeCode = () => {
+        //userConfirm => send email and code
+        // get res.token (setToken)
+        return (
+            <div style={styles.modalcontainer} onClick={this.props.dontExit}>
+            <div style={styles.errormessage}>{this.props.error}</div>
+            <div style={styles.modaltitle}>
+                Check your email
+            </div>
+            <form style={styles.inputcontainer}>
+                <FormGroup
+                    controlId="formBasicText"
+                    style={{width: '220px'}}
+                    >
+                        <FormControl
+                            type="text"
+                            value={this.props.OTC}
+                            placeholder="Code"
+                            onChange={this.props.onChangeCode}
+                            style={{ padding: 10}}
+                        />
+                        <FormControl.Feedback />
+                        <div style={styles.forgotbutton}>
+                            <div onClick={this.props.backToLogin} style={styles.forgottext}>Back to login</div>
+                        </div>
+                    </FormGroup>
+                </form>
+                <div className='submitbutton' onClick={this.props.onSubmitOTC}>Submit</div>
+            </div>
+        )
+    }
+    renderChangePassword = () => {
+        //using this token send email, password, and confirm password
+        //res means good to go through
+        return (
+            <div style={styles.modalcontainer} onClick={this.props.dontExit}>
+                <div style={styles.errormessage}>{this.props.error}</div>
+                <div style={[styles.errormessage, {color: 'green'}]}>{this.props.success}</div>
+                <div style={styles.modaltitle}>
+                    Enter your email
+                </div>
+                <form style={styles.inputcontainer}>
+                    <FormGroup
+                        controlId="formBasicText"
+                        style={{width: '220px'}}
+                        >
+                            <FormControl
+                                type="password"
+                                value={this.props.newpassword}
+                                placeholder="New password"
+                                onChange={this.props.onChangeNewPassword}
+                                style={{ padding: 10, marginBottom: 15}}
+                            />
+                            <FormControl
+                                type="password"
+                                value={this.props.confirm}
+                                placeholder="Confirm password"
+                                onChange={this.props.onChangeConfirm}
+                                onSubmit={this.props.onResetPassword}
+                                style={{ padding: 10}}
+                            />
+                            <div style={styles.forgotbutton}>
+                                <div onClick={this.props.backToLogin} style={styles.forgottext}>Back to login</div>
+                            </div>
+                        </FormGroup>
+                    </form>
+                    <div className='submitbutton' onClick={this.props.onResetPassword}>I wont forget again...</div>
+                </div>
+        )
+    }
+    renderScreen = () => {
+        if (this.props.screen === 'login') {
+            return (
+                this.renderLogin()
+            )
+        }
+        else if (this.props.screen === 'forgotPassword') {
+            return (
+                this.renderForgot()
+            )
+        }
+        else if (this.props.screen === 'OTC') {
+            return (
+                this.renderOneTimeCode()
+            )
+        }
+        else if (this.props.screen === 'resetPassword') {
+            return (
+                this.renderChangePassword()
+            )
+        }
+    }
     render() {
         return (
             <div style={{width: '100%', height: '100%', position:'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                <div style={styles.modalcontainer} onClick={this.props.dontExit}>
-                    <div style={styles.errormessage}>{this.props.error}</div>
-                    <div style={[styles.errormessage, {color: 'green'}]}>{this.props.success}</div>
-                    <div style={styles.modaltitle}>
-                        Login
-                    </div>
-                    <form style={styles.inputcontainer}>
-                        <FormGroup
-                            controlId="formBasicText"
-                            validationState={this.getValidationState()}
-                            style={{width: '220px'}}
-                            >
-                                <FormControl
-                                    type="text"
-                                    // value={this.state.email}
-                                    placeholder="Username"
-                                    onChange={this.props.onChangeEmail}
-                                    style={{ padding: 10, marginBottom: 15}}
-                                />
-                                <FormControl.Feedback />
-                                <FormControl
-                                    validationState={null}
-                                    type="password"
-                                    // value={this.state.password}
-                                    placeholder="Password"
-                                    onChange={this.props.onChangePassword}
-                                    onSubmit={this.props.onSubmit}
-                                    style={{ padding: 10}}
-
-                                />
-                            </FormGroup>
-                        </form>
-                        <div className='submitbutton' onClick={this.props.onSubmit}>Submit</div>
-                    </div>
+                {/* TODO from here */}
+                {this.renderScreen()}
+                    {/* TODO to here */}
                     <div style={styles.container} onClick={this.props.exitModal}>
                     </div>
             </div>

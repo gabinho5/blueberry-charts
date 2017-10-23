@@ -286,7 +286,11 @@ class ChartsContainer extends React.Component {
             error: '',
             success: '',
             userId: '',
-            csvData: [{'Your csv did not download correctly': 'Please try again'}]
+            OTC: '',
+            newpassword: '',
+            confirm: '',
+            csvData: [{'Your csv did not download correctly': 'Please try again'}],
+            screen: 'login',
         }
     }
 
@@ -414,15 +418,23 @@ class ChartsContainer extends React.Component {
             error: '',
         })
     }
-    handleSubmit = (event) => {
-        if(this.getValidationState() === 'warning')
-        {
-            alert("Please use an IBM email")
-        }
-        else(
-            alert("Thank you for logging in!")
-        )
-        // event.preventDefault();
+    onChangeCode = (e) => {
+        this.setState({
+            OTC: e.target.value,
+            error: '',
+        })
+    }
+    onChangeNewPassword = (e) => {
+        this.setState({
+            newpassword: e.target.value,
+            error: '',
+        })
+    }
+    onChangeConfirm = (e) => {
+        this.setState({
+            confirm: e.target.value,
+            error: '',
+        })
     }
 
     handleCalendar = (date) => {
@@ -440,6 +452,9 @@ class ChartsContainer extends React.Component {
         this.setState({
             modal: true,
         })
+    }
+    backToLogin = () => {
+        this.setState({screen: 'login'})
     }
     // const checkLoginPromise = new Promise((resolve, reject) => {
     //     HttpServices.get("/api/user/login", {email: this.state.email, password: this.state.password}, (err, res) => {
@@ -499,7 +514,58 @@ class ChartsContainer extends React.Component {
             })
         })
     }
-
+    onForgotPassword = () => {
+        this.setState({
+            screen: 'forgotPassword'
+        })
+    }
+    onSubmitResetEmail = () => {
+        HttpServices.post('/api/user/sendcode', {email: this.state.email}, (err, res) => {
+            if (err) {
+                this.setState({error: err})
+            } else {
+                this.setState({
+                    screen: 'OTC',
+                })
+            }
+        })
+    }
+    onSubmitOTC = () => {
+        HttpServices.post('/api/user/confirm', {email: this.state.email, code: this.state.OTC}, (err, res) => {
+            if (err) {
+                this.setState({error: err})
+            } else {
+                HttpServices.setToken(res.token)
+                this.setState({
+                    screen: 'resetPassword'
+                })
+            }
+        })
+    }
+    onResetPassword = () => {
+        if (this.state.newpassword !== this.state.confirm) {
+            this.setState({error: 'Those passwords do not match!'})
+        }
+        else {
+            HttpServices.post('/api/user/resetpassword', {email: this.state.email, password: this.state.confirm}, (err, res) => {
+                if (err) {
+                    this.setState({error: err})
+                } else {
+                    this.setState({
+                        success: 'Password reset!'
+                    })
+                    setTimeout(() => {
+                        this.setState({
+                            screen: 'login',
+                            modal: false,
+                            success: '',
+                            error: ''
+                        }) // Yay! Everything went well!
+                    }, 1000);
+                }
+            })
+        }
+    }
     renderNaughtyList = () => {
         return(
             this.state.naughtyList[this.state.date].map((name, index) => {
@@ -509,29 +575,6 @@ class ChartsContainer extends React.Component {
             })
         )
     }
-    userLogin = () => {
-        return new Promise((resolve, reject) => {
-            HttpServices.post('/api/user/login', {email: this.state.email, password: this.state.password}, (err, res) => {
-                this.setState({token: 'loading'})
-                if (err) {
-                    console.log(err)
-                    this.setState({token: 'error'})
-                } else {
-                    HttpServices.get('/api/user/me', (err, res) => {
-                        this.setState({token: 'loading'})
-                        if (err) {
-                            console.log(err)
-                            this.setState({token: 'error'})
-                        } else {
-                            this.setState({token: res.token})
-                        }
-                    })
-                    this.setState({token: res.token})
-                }
-            })
-        })
-    }
-
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     render() {
         const { date, allProjects } = this.state
@@ -652,8 +695,9 @@ class ChartsContainer extends React.Component {
             <div style={styles.containerstyles}>
                  {this.state.modal &&
                       <LoginModal openModal={this.openModal} exitModal={this.exitModal}
-                          onChangePassword={this.onChangePassword} onChangeEmail={this.onChangeEmail} onSubmit={this.checkForLogin}
-                          error={this.state.error} success={this.state.success} email={this.state.email} password={this.state.password}/>}
+                          onChangePassword={this.onChangePassword} onChangeEmail={this.onChangeEmail} onChangeCode={this.onChangeCode} onChangeNewPassword={this.onChangeNewPassword} onChangeConfirm={this.onChangeConfirm} onSubmit={this.checkForLogin} onForgotPassword={this.onForgotPassword}
+                          onSubmitResetEmail={this.onSubmitResetEmail} onSubmitOTC={this.onSubmitOTC} onResetPassword={this.onResetPassword} backToLogin={this.backToLogin}
+                          error={this.state.error} success={this.state.success} email={this.state.email} password={this.state.password} OTC={this.state.OTC} newpassword={this.state.newpassword} confirm={this.state.confirm} screen={this.state.screen}/>}
                 <div style ={styles.topbar}>
                     <div style= {styles.blueberry}>
                         <Logo />
