@@ -128,7 +128,7 @@ const styles = {
             outline: 'none'
         }
     },
-    csvbuttonstyles: {
+    loginButtonStyles: {
         fontFamily: 'Quicksand',
         fontSize: '15px',
         border: 'solid',
@@ -146,15 +146,15 @@ const styles = {
         width: '200px',
         minWidth: '200px',
         marginRight: '20px',
-        ':hover': {
-            backgroundColor: '#fff',
-            color: '#000021',
-            cursor: 'pointer',
-        },
-        ':focus': {
-            outline: 'none'
-        }
-    }
+      ':hover': {
+        backgroundColor: '#fff',
+        color: '#000021',
+        cursor: 'pointer',
+      },
+      ':focus': {
+        outline: 'none'
+      }
+  },
 }
 
 const csvdata = [
@@ -200,6 +200,12 @@ class ChartsContainer extends React.Component {
             isAllChecked: true,
             allprojects: {},
             modal: false,
+            email: '',
+            password: '',
+            token: '',
+            error: '',
+            userId: '',
+            csvData: [{'Your csv did not download correctly': 'Please try again'}]
         }
     }
 
@@ -296,8 +302,27 @@ class ChartsContainer extends React.Component {
     //     this.setState({ checkedSectors : checkedSectors})
     // }
 
-    handleChange = (e) => {
-        this.setState({value: e.target.value});
+    onChangePassword = (e) => {
+        this.setState({
+            password: e.target.value,
+            error: '',
+        })
+    }
+    onChangeEmail = (e) => {
+        this.setState({
+            email: e.target.value,
+            error: '',
+        })
+    }
+    handleSubmit = (event) => {
+        if(this.getValidationState() === 'warning')
+        {
+            alert("Please use an IBM email")
+        }
+        else(
+            alert("Thank you for logging in!")
+        )
+        // event.preventDefault();
     }
 
     handleCalendar = (date) => {
@@ -316,21 +341,75 @@ class ChartsContainer extends React.Component {
             modal: true,
         })
     }
+    // const checkLoginPromise = new Promise((resolve, reject) => {
+    //     HttpServices.get("/api/user/login", {email: this.state.email, password: this.state.password}, (err, res) => {
+    //         if(err) {
+    //             console.log(err)
+    //             reject("failure reason: " + err); // rejected
+    //         }
+    //         else {
+    //             console.log(res)
+    //             resolve(res); // fulfilled
+    //         }
+    //     })
+    // });
     checkForLogin = () => {
-        this.setState({
-            modal: true,
-            //set to true to show modal
+        const checkLoginPromise = new Promise((resolve, reject) => {
+            HttpServices.post("/api/user/login", {email: this.state.email, password: this.state.password}, (err, res) => {
+                if(err) {
+                    this.setState({error: err})
+                    console.log(err)
+                    // reject("failure reason: " + err); // rejected
+                }
+                else {
+                    console.log('got token')
+                    setTimeout(function(){
+                        console.log('done resolving promise')
+                        resolve(res); // Yay! Everything went well!
+                    }, 100);
+                    HttpServices.setToken(res.token)
+                }
+            })
+        });
+        checkLoginPromise.then(info => {
+            this.setState({
+                token: info.token,
+                userId: info.user.id,
+                modal: false
+            })
+            console.log(this.state.token)
+            HttpServices.get("/api/user/hours", (err, res) => {
+                if (err) {
+                    console.log(err)
+                }
+                else {
+                    console.log(res)
+                    const userHours = []
+                    Object.keys(res).forEach(date => {
+                        res[date].forEach(hoursObj => {
+                            userHours.push({
+                                date: hoursObj.date,
+                                project: hoursObj.title,
+                                hours: hoursObj.hours,
+                                content: hoursObj.content
+                            })
+                        })
+                    })
+                    this.setState({csvData: userHours})
+                }
+            })
         })
     }
+
     pullInfo = () => {
-        HttpServices.get("/api/user/hours", (err, res) => {
-            if (err) {
-                console.log(err)
-            }
-            else {
-                console.log(res)
-            }
-        })
+            HttpServices.get("/api/user/hours", (err, res) => {
+                if (err) {
+                    console.log(err)
+                }
+                else {
+                    console.log(res)
+                }
+            })
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -438,7 +517,7 @@ class ChartsContainer extends React.Component {
         return (
 
             <div style={styles.containerstyles}>
-                 {this.state.modal && <LoginModal openModal={this.openModal} exitModal={this.exitModal}/>}
+                 {this.state.modal && <LoginModal openModal={this.openModal} exitModal={this.exitModal} onChangePassword={this.onChangePassword} onChangeEmail={this.onChangeEmail} onSubmit={this.checkForLogin} error={this.state.error}/>}
                 <div style ={styles.topbar}>
                     <div style= {styles.blueberry}>
                         <Logo />
@@ -487,7 +566,10 @@ class ChartsContainer extends React.Component {
                         </div>
                     </div>
                     {/* <Button data={csvdata} onClick={() => this.checkForLogin()}/> */}
-                    <CsvButton data={csvdata} onClick={() => this.checkForLogin()}/>
+                    {this.state.userId ?
+                        <CsvButton data={this.state.csvData} onClick={() => this.pullInfo()}/> :
+                        <div style={styles.loginButtonStyles} onClick={() => this.openModal()}>Login to download hours</div>
+                    }
 
                     {/* onClick={() => this.checkForLogin()} */}
                 </div>
